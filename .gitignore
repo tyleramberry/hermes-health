@@ -1,0 +1,23 @@
+# Byte-compiled / caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Stores and rendered widgets (never commit health data)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+health-widget-*.html
+*.xml
+
+# Editors / OS
+.DS_Store
+.venv/
+venv/
+.idea/
+.vscode/

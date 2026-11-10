@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Keep the ingest endpoint running on an always-on Mac.
+
+  Install:
+    1. Edit the four REPLACE_ME values below (paths, bind address, and the store).
+    2. cp deploy/launchd.plist ~/Library/LaunchAgents/com.amberry.hermes-health.plist
+    3. launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.amberry.hermes-health.plist
+    4. launchctl kickstart -k gui/$(id -u)/com.amberry.hermes-health
+    5. curl http://<bind-address>:8787/health
+
+  Logs: ~/.hermes-health/hermes-health.log (and hermes-health.err.log)
+  Stop: launchctl bootout gui/$(id -u)/com.amberry.hermes-health
+
+  Runs the system Python on purpose: the pipeline has no third-party dependencies,
+  so it needs no virtualenv, no Homebrew, and no pip.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.amberry.hermes-health</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>REPLACE_ME/path/to/hermes-health/healthd.py</string>
+    <string>serve</string>
+    <string>--host</string>
+    <string>REPLACE_ME_bind_address</string>
+    <string>--port</string>
+    <string>8787</string>
+    <string>--quiet</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HERMES_HEALTH_DB</key>
+    <string>REPLACE_ME/Users/you/.hermes-health/health.db</string>
+    <key>HERMES_HEALTH_TZ</key>
+    <string>America/Denver</string>
+    <!-- Set HERMES_HEALTH_TOKEN only if the port is reachable beyond your VPN/LAN. -->
+    <!-- <key>HERMES_HEALTH_TOKEN</key><string>REPLACE_ME</string> -->
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ProcessType</key>
+  <string>Background</string>
+
+  <key>StandardOutPath</key>
+  <string>REPLACE_ME/Users/you/.hermes-health/hermes-health.log</string>
+  <key>StandardErrorPath</key>
+  <string>REPLACE_ME/Users/you/.hermes-health/hermes-health.err.log</string>
+</dict>
+</plist>

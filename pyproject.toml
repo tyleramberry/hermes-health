@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-health"
+version = "1.0.0"
+description = "Apple Health data for AI agents: ingest endpoint, local store, agent tools, dashboard"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Tyler Amberry"}]
+keywords = ["apple-health", "healthkit", "mcp", "hermes", "quantified-self", "sleep"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Home Automation",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# The test suite is deliberately dependency-free; keep it that way.
+dev = []
+
+[project.urls]
+Homepage = "https://github.com/tyleramberry/hermes-health"
+Issues = "https://github.com/tyleramberry/hermes-health/issues"
+
+[project.scripts]
+hermes-health = "hermes_health.cli:main"
+hermes-health-mcp = "hermes_health.mcp_server:main"
+
+# Note: the Hermes plugin is installed from the repo root (`hermes plugins install
+# tyleramberry/hermes-health`), not through pip. A pip install gives you the CLI and
+# the MCP server; the plugin's tools come from the checkout's plugin.yaml.
+[tool.setuptools]
+packages = ["hermes_health"]

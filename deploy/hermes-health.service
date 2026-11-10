@@ -1,0 +1,27 @@
+# Keep the ingest endpoint running on a Linux host.
+#
+#   sudo cp deploy/hermes-health.service /etc/systemd/system/hermes-health@.service
+#   # edit the paths below, then:
+#   sudo systemctl enable --now hermes-health@$USER
+#   curl http://127.0.0.1:8787/health
+#
+# Bind to your VPN/LAN address (not 0.0.0.0) unless you also set HERMES_HEALTH_TOKEN.
+
+[Unit]
+Description=hermes-health ingest endpoint (Apple Health pushes)
+Documentation=https://github.com/tyleramberry/hermes-health
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/hermes-health/healthd.py serve --host 127.0.0.1 --port 8787 --quiet
+Environment=HERMES_HEALTH_DB=%h/.hermes-health/health.db
+Environment=HERMES_HEALTH_TZ=Etc/UTC
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

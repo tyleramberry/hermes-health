@@ -1,0 +1,32 @@
+name: hermes-health
+version: "1.0.0"
+description: >-
+  Apple Health data for the agent. An ingest endpoint your phone can push to
+  (iOS Shortcuts, or a Health Auto Export REST automation), a local SQLite store
+  that aggregates on the way in, tools to read activity, sleep, heart, and
+  workouts, and a dashboard widget. Standard library only: no pip install, no
+  build step, no cloud.
+author: Tyler Amberry
+license: MIT
+kind: standalone
+manifest_version: 2
+requires_hermes: ">=0.22.0"
+homepage: https://github.com/tyleramberry/hermes-health
+platforms: [macos, linux]
+tags: [health, apple-health, healthkit, quantified-self, sleep, workouts, ingest]
+provides_tools:
+  - health_summary
+  - health_query
+  - health_sleep
+  - health_workouts
+  - health_metrics
+  - health_status
+  - health_dashboard
+config_schema:
+  db_path: {type: str, default: "", label: "Store path", description: "SQLite file. Empty means $HERMES_HEALTH_DB or ~/.hermes-health/health.db."}
+  timezone: {type: str, default: "", label: "Timezone", description: "IANA zone used to attribute samples to calendar days. Empty means the host's zone."}
+  ingest_host: {type: str, default: "127.0.0.1", label: "Ingest bind address", description: "Address the ingest server listens on. Use the VPN/LAN address so the phone can reach it."}
+  ingest_port: {type: int, default: 8787, label: "Ingest port"}
+  ingest_token: {type: secret, env: HERMES_HEALTH_TOKEN, label: "Ingest token", description: "Optional bearer token. Without it, the network is the auth layer."}
+  raw_keep_days: {type: int, default: 120, label: "Raw sample retention (days)", description: "Raw samples are pruned after this; hourly and daily rollups keep the full history."}
+  widget_dir: {type: str, default: "", label: "Widget output directory", description: "Where health_dashboard writes its HTML. Empty means the store's directory."}
